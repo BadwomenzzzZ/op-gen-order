@@ -2,6 +2,7 @@ package com.genorder.mapper;
 
 import com.genorder.entity.Order;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * <p>
@@ -13,4 +14,5 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  */
 public interface OrderMapper extends BaseMapper<Order> {
 
+    Order getLastOrderByMachId(@Param("machineId") String machineId);
 }

@@ -3,6 +3,8 @@ package com.genorder.entity;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import lombok.Builder;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -16,6 +18,7 @@ import java.time.LocalDateTime;
  * @since 2023-07-31
  */
 @TableName("t_order")
+@Builder
 public class Order implements Serializable {
 
     private static final long serialVersionUID = 1L;

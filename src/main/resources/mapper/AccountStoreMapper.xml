@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.genorder.mapper.AccountStoreMapper">
+
+    <select id="listMember" resultType="com.genorder.dto.MemberDTO">
+        select
+            account_id,
+            store_name as name
+        from t_account_store
+    </select>
+</mapper>

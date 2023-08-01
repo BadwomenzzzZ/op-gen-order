@@ -2,6 +2,8 @@ package com.genorder.service;
 
 import com.genorder.dto.DeliverDTO;
 import com.genorder.dto.MachineShelfDTO;
+import com.genorder.dto.MemberDTO;
+import com.genorder.dto.OrderAddDTO;
 import com.genorder.entity.Order;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -20,4 +22,9 @@ public interface IOrderService extends IService<Order> {
     List<DeliverDTO> listDeliver();
 
     List<MachineShelfDTO> listGoods(Long deliverId);
+
+    List<MemberDTO> listMember();
+
+
+    void addOrder(OrderAddDTO dto);
 }
