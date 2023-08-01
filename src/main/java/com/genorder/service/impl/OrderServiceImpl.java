@@ -57,6 +57,9 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
     @Autowired
     private DeliversOrderMapper deliversOrderMapper;
 
+    @Autowired
+    private VirtualLogMapper virtualOrderMapper;
+
 
     @Override
     public List<DeliverDTO> listDeliver() {
@@ -201,6 +204,13 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
                     .build();
             log.info("deliversOrder : {}" , deliversOrder);
             deliversOrderMapper.insert(deliversOrder);
+            //add t_virtual_log
+            VirtualLog virtualOrder = VirtualLog.builder()
+                    .createTime(LocalDateTime.now())
+                    .orderSn(orderSn)
+                    .build();
+            virtualOrderMapper.insert(virtualOrder);
+            log.info("virtualOrder : {}" , virtualOrder);
         }
     }
 }
