@@ -2,10 +2,7 @@ package com.genorder.controller;
 
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.genorder.config.BaseResponse;
-import com.genorder.dto.DeliverDTO;
-import com.genorder.dto.MachineShelfDTO;
-import com.genorder.dto.MemberDTO;
-import com.genorder.dto.OrderAddDTO;
+import com.genorder.dto.*;
 import com.genorder.service.IOrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -44,7 +41,7 @@ public class OrderController {
         if (deliverId == null) {
             return BaseResponse.error();
         }
-        List<MachineShelfDTO> list = orderService.listGoods(deliverId);
+        List<GoodsDTO> list = orderService.listGoods(deliverId);
         return BaseResponse.success(list);
     }
 

@@ -12,11 +12,18 @@
                 LEFT JOIN t_machine t2 ON t1.machine_id = t2.machine_id
     </select>
 
-    <select id="listGoods" resultType="com.genorder.dto.MachineShelfDTO">
-        select
-            *
-        from t_machine_shelf
-        where machine_id = #{deliverId}
+    <select id="listGoods" resultType="com.genorder.dto.GoodsDTO">
+        SELECT
+            ms.id,
+            ms.goods_id,
+            gs.goods_name,
+            ms.stock,
+            ms.price
+        FROM
+            t_machine_shelf ms
+                LEFT JOIN t_goods gs ON ms.goods_id = gs.goods_id
+        WHERE
+            ms.machine_id = #{deliverId}
     </select>
 
 </mapper>

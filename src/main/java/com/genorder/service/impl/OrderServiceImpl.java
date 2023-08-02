@@ -4,10 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.genorder.config.BizException;
-import com.genorder.dto.DeliverDTO;
-import com.genorder.dto.MachineShelfDTO;
-import com.genorder.dto.MemberDTO;
-import com.genorder.dto.OrderAddDTO;
+import com.genorder.dto.*;
 import com.genorder.entity.*;
 import com.genorder.mapper.*;
 import com.genorder.service.IOrderService;
@@ -71,8 +68,8 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
     }
 
     @Override
-    public List<MachineShelfDTO> listGoods(Long deliverId) {
-        List<MachineShelfDTO> list = machineShelfMapper.listGoods(deliverId);
+    public List<GoodsDTO> listGoods(Long deliverId) {
+        List<GoodsDTO> list = machineShelfMapper.listGoods(deliverId);
         if (CollectionUtils.isEmpty(list)) {
             return new ArrayList<>();
         }

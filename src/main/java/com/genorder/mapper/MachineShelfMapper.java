@@ -1,7 +1,7 @@
 package com.genorder.mapper;
 
 import com.genorder.dto.DeliverDTO;
-import com.genorder.dto.MachineShelfDTO;
+import com.genorder.dto.GoodsDTO;
 import com.genorder.entity.MachineShelf;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Param;
@@ -20,5 +20,5 @@ public interface MachineShelfMapper extends BaseMapper<MachineShelf> {
 
     List<DeliverDTO> listDeliver();
 
-    List<MachineShelfDTO> listGoods(@Param("deliverId") Long deliverId);
+    List<GoodsDTO> listGoods(@Param("deliverId") Long deliverId);
 }
