@@ -14,5 +14,8 @@
             id DESC
             LIMIT 1
     </select>
+    <select id="listOrder" resultType="com.genorder.entity.Order">
+        
+    </select>
 
 </mapper>

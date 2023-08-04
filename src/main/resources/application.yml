@@ -8,3 +8,8 @@ spring:
     url: jdbc:mysql://127.0.0.1:3306/hxh_platform
     username: root
     password: 123456
+feign:
+  okhttp:
+    enabled: true
+  system:
+    url: http://hxh.aidigifts.com/

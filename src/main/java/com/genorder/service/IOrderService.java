@@ -24,4 +24,6 @@ public interface IOrderService extends IService<Order> {
 
 
     void addOrder(OrderAddDTO dto);
+
+    List<Order> listOrder(String token);
 }

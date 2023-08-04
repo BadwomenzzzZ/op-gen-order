@@ -1,11 +1,14 @@
 package com.genorder.service.impl;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.genorder.config.BizException;
 import com.genorder.dto.*;
 import com.genorder.entity.*;
+import com.genorder.feign.UserFeign;
 import com.genorder.mapper.*;
 import com.genorder.service.IOrderService;
 import com.genorder.utils.ArithUtil;
@@ -56,6 +59,9 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
 
     @Autowired
     private VirtualLogMapper virtualOrderMapper;
+
+    @Autowired
+    private UserFeign userFeign;
 
 
     @Override
@@ -209,5 +215,24 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
             virtualOrderMapper.insert(virtualOrder);
             log.info("virtualOrder : {}" , virtualOrder);
         }
+    }
+
+    @Override
+    public List<Order> listOrder(String token) {
+        JSONObject rep = userFeign.getInfo(token);
+        String code = rep.getString("code");
+        if (!"200".equals(code)) {
+            throw new BizException("服务异常");
+        }
+        JSONArray roles = rep.getJSONArray("roles");
+        if (CollectionUtils.isEmpty(roles)) {
+            return new ArrayList<>();
+        }
+        String roleCode = (String) roles.get(0);
+        List<Order> list = orderMapper.listOrder(roleCode);
+        if (CollectionUtils.isEmpty(list)) {
+            return new ArrayList<>();
+        }
+        return list;
     }
 }

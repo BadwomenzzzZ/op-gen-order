@@ -3,12 +3,10 @@ package com.genorder.controller;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.genorder.config.BaseResponse;
 import com.genorder.dto.*;
+import com.genorder.entity.Order;
 import com.genorder.service.IOrderService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -50,5 +48,12 @@ public class OrderController {
         List<MemberDTO> list = orderService.listMember();
         return BaseResponse.success(list);
     }
+
+    @RequestMapping("/list")
+    public BaseResponse listOrder(@RequestHeader("Authorization") String token) {
+        List<Order> list = orderService.listOrder(token);
+        return BaseResponse.success(list);
+    }
+
 
 }
