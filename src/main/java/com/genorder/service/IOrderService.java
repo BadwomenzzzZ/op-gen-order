@@ -1,5 +1,6 @@
 package com.genorder.service;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.genorder.dto.*;
 import com.genorder.entity.Order;
 import com.baomidou.mybatisplus.extension.service.IService;
@@ -25,5 +26,5 @@ public interface IOrderService extends IService<Order> {
 
     void addOrder(OrderAddDTO dto);
 
-    List<Order> listOrder(String token);
+    Page<Order> listOrder(String token , Integer pageNumber, Integer pageSize);
 }

@@ -15,7 +15,10 @@
             LIMIT 1
     </select>
     <select id="listOrder" resultType="com.genorder.entity.Order">
-        
+        SELECT
+            *
+        FROM
+            t_order
     </select>
 
 </mapper>

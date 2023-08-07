@@ -1,6 +1,7 @@
 package com.genorder.controller;
 
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.genorder.config.BaseResponse;
 import com.genorder.dto.*;
 import com.genorder.entity.Order;
@@ -50,8 +51,11 @@ public class OrderController {
     }
 
     @RequestMapping("/list")
-    public BaseResponse listOrder(@RequestHeader("Authorization") String token) {
-        List<Order> list = orderService.listOrder(token);
+    public BaseResponse listOrder(@RequestHeader("Authorization") String token , Integer pageNum , Integer pageSize) {
+        if (pageNum == null || pageSize == null) {
+            return BaseResponse.error();
+        }
+        Page<Order> list = orderService.listOrder(token , pageNum , pageSize);
         return BaseResponse.success(list);
     }
 

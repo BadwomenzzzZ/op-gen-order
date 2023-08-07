@@ -3,9 +3,12 @@ package com.genorder.service.impl;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.genorder.config.BizException;
+import com.genorder.config.Constant;
 import com.genorder.dto.*;
 import com.genorder.entity.*;
 import com.genorder.feign.UserFeign;
@@ -218,21 +221,23 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
     }
 
     @Override
-    public List<Order> listOrder(String token) {
-        JSONObject rep = userFeign.getInfo(token);
-        String code = rep.getString("code");
-        if (!"200".equals(code)) {
-            throw new BizException("服务异常");
-        }
-        JSONArray roles = rep.getJSONArray("roles");
-        if (CollectionUtils.isEmpty(roles)) {
-            return new ArrayList<>();
-        }
-        String roleCode = (String) roles.get(0);
-        List<Order> list = orderMapper.listOrder(roleCode);
-        if (CollectionUtils.isEmpty(list)) {
-            return new ArrayList<>();
-        }
-        return list;
+    public Page<Order> listOrder(String token , Integer pageNumber, Integer pageSize) {
+//        JSONObject rep = userFeign.getInfo(token);
+//        String code = rep.getString("code");
+//        if (!"200".equals(code)) {
+//            throw new BizException("服务异常");
+//        }
+//        JSONArray roles = rep.getJSONArray("roles");
+//        if (CollectionUtils.isEmpty(roles)) {
+//            return null;
+//        }
+//        String roleCode = (String) roles.get(0);
+//        if (Constant.ALL_ORDER_ROLE.equals(roleCode)) {
+//            Page<Order> page = new Page<>(pageNumber, pageSize);
+//            Page<Order> pageLists = orderMapper.listOrder(page);
+//            return pageLists;
+//        }
+        //// FIXME: 2023/8/7  需求变更
+        return null;
     }
 }

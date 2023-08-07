@@ -1,5 +1,6 @@
 package com.genorder.mapper;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.genorder.entity.Order;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Param;
@@ -18,5 +19,5 @@ public interface OrderMapper extends BaseMapper<Order> {
 
     Order getLastOrderByMachId(@Param("machineId") String machineId);
 
-    List<Order> listOrder(@Param("roleCode") String roleCode);
+    Page<Order> listOrder(@Param("page") Page<Order> page);
 }

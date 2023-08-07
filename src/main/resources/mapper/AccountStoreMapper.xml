@@ -3,9 +3,14 @@
 <mapper namespace="com.genorder.mapper.AccountStoreMapper">
 
     <select id="listMember" resultType="com.genorder.dto.MemberDTO">
-        select
+        SELECT
+            t2.tenant_name,
             account_id,
-            store_name as name
-        from t_account_store
+            store_name AS NAME
+        FROM
+            t_account_store t1
+                LEFT JOIN sys_tenant t2 ON t1.tenant_id = t2.id
+        WHERE
+            t2.tenant_name LIKE '%X'
     </select>
 </mapper>
