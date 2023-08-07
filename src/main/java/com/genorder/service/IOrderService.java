@@ -19,7 +19,7 @@ public interface IOrderService extends IService<Order> {
 
     List<DeliverDTO> listDeliver();
 
-    List<GoodsDTO> listGoods(Long deliverId);
+    List<GoodsDTO> listGoods(String deliverId);
 
     List<MemberDTO> listMember();
 

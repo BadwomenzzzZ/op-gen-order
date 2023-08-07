@@ -4,26 +4,37 @@
 
 
     <select id="listDeliver" resultType="com.genorder.dto.DeliverDTO">
-        SELECT
-            t1.machine_id AS id,
-            t2.machine_name AS NAME
-        FROM
-            ( SELECT machine_id FROM t_machine_shelf WHERE deleted = 0 GROUP BY machine_id ) t1
-                LEFT JOIN t_machine t2 ON t1.machine_id = t2.machine_id
+            SELECT
+                t1.machine_id AS id,
+                t2.machine_name AS NAME
+            FROM
+                ( SELECT machine_id FROM t_machine_shelf WHERE deleted = 0 GROUP BY machine_id ) t1
+                    LEFT JOIN t_machine t2 ON t1.machine_id = t2.machine_id
+                    LEFT JOIN sys_tenant st ON st.id = t2.tenant_id
+            WHERE
+                st.tenant_name LIKE '%X'
     </select>
 
     <select id="listGoods" resultType="com.genorder.dto.GoodsDTO">
-        SELECT
-            ms.id,
-            ms.goods_id,
-            gs.goods_name,
-            ms.stock,
-            ms.price
-        FROM
-            t_machine_shelf ms
-                LEFT JOIN t_goods gs ON ms.goods_id = gs.goods_id
-        WHERE
-            ms.machine_id = #{deliverId}
+            SELECT
+                ms.id,
+                ms.shelf_index,
+                ms.goods_id,
+                gs.goods_name,
+                ms.stock,
+                ms.price,
+                tm.tenant_id,
+                st.tenant_name,
+                tm.account_id,
+                ts.store_name as name
+            FROM
+                t_machine_shelf ms
+                    LEFT JOIN t_goods gs ON ms.goods_id = gs.goods_id
+                    LEFT JOIN t_machine tm ON tm.machine_id = ms.machine_id
+                    LEFT JOIN sys_tenant st ON st.id = tm.tenant_id
+                    LEFT JOIN t_account_store ts ON ts.account_id = tm.account_id
+            WHERE
+                ms.machine_id = #{deliverId}
     </select>
 
 </mapper>

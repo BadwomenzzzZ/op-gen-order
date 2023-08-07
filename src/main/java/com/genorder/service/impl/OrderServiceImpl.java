@@ -77,7 +77,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
     }
 
     @Override
-    public List<GoodsDTO> listGoods(Long deliverId) {
+    public List<GoodsDTO> listGoods(String deliverId) {
         List<GoodsDTO> list = machineShelfMapper.listGoods(deliverId);
         if (CollectionUtils.isEmpty(list)) {
             return new ArrayList<>();

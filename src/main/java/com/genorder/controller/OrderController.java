@@ -36,7 +36,7 @@ public class OrderController {
     }
 
     @RequestMapping("/listGoods")
-    public BaseResponse listGoods(Long deliverId) {
+    public BaseResponse listGoods(String deliverId) {
         if (deliverId == null) {
             return BaseResponse.error();
         }

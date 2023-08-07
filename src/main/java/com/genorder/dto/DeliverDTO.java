@@ -6,7 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 @Data
 public class DeliverDTO {
 
-    private Long id ;
+    private String id ;
 
     private String name;
 

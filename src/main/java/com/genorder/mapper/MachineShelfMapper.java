@@ -20,5 +20,5 @@ public interface MachineShelfMapper extends BaseMapper<MachineShelf> {
 
     List<DeliverDTO> listDeliver();
 
-    List<GoodsDTO> listGoods(@Param("deliverId") Long deliverId);
+    List<GoodsDTO> listGoods(@Param("deliverId") String deliverId);
 }
