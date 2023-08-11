@@ -150,7 +150,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
                     .payPrice(machineShelf.getPrice())
                     .payType(dto.getPayType())
                     .payTime(LocalDateTime.now())
-                    .orderState(dto.getOrderState().byteValue())
+                    .orderStatus(dto.getOrderState().byteValue())
                     .payStatus(payStatus)
                     .clientSource(clientSource)
                     .appId(accountStore.getMpAppid())

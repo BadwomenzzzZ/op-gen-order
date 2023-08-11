@@ -72,7 +72,7 @@ public class Order implements Serializable {
     /**
      * 订单状态 :  0 待出货，1 已出货，2 出货失败，3 出货中，4 部分出货， 5 出货超时
      */
-    private Byte orderState;
+    private Byte orderStatus;
 
     /**
      * 支付状态：0 未支付，1  已支付，2 退款中，3 已退款
@@ -257,11 +257,11 @@ public class Order implements Serializable {
     }
 
     public Byte getOrderState() {
-        return orderState;
+        return orderStatus;
     }
 
     public void setOrderState(Byte orderState) {
-        this.orderState = orderState;
+        this.orderStatus = orderState;
     }
 
     public Byte getPayStatus() {
@@ -452,7 +452,7 @@ public class Order implements Serializable {
             ", payPrice = " + payPrice +
             ", payType = " + payType +
             ", payTime = " + payTime +
-            ", orderState = " + orderState +
+            ", orderState = " + orderStatus +
             ", payStatus = " + payStatus +
             ", clientSource = " + clientSource +
             ", userId = " + userId +
