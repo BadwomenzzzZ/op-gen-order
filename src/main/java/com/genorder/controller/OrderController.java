@@ -5,11 +5,16 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.genorder.config.BaseResponse;
 import com.genorder.dto.*;
 import com.genorder.entity.Order;
+import com.genorder.pojo.OrderSearchPOJO;
 import com.genorder.service.IOrderService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/order")
@@ -51,12 +56,21 @@ public class OrderController {
     }
 
     @RequestMapping("/list")
-    public BaseResponse listOrder(@RequestHeader("Authorization") String token , Integer pageNum , Integer pageSize) {
+    public Object listOrder(@RequestHeader(value = "Authorization" ,required = false) String token , Integer pageNum , Integer pageSize
+                             , OrderSearchPOJO pojo ,
+                            @RequestParam(value = "params[beginTime]" , required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") Date beginTime ,
+                            @RequestParam(value = "params[endTime]" , required = false)   @DateTimeFormat(pattern = "yyyy-MM-dd") Date endTime) {
         if (pageNum == null || pageSize == null) {
             return BaseResponse.error();
         }
-        Page<Order> list = orderService.listOrder(token , pageNum , pageSize);
-        return BaseResponse.success(list);
+        if (StringUtils.isBlank(token)) {
+            Map<String, Object> map = new HashMap<>();
+            map.put("code", 401);
+            map.put("msg", "令牌不能为空");
+            return map;
+        }
+        Map map = orderService.listOrder(token , pageNum , pageSize , pojo , beginTime , endTime);
+        return map;
     }
 
 

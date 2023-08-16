@@ -14,11 +14,97 @@
             id DESC
             LIMIT 1
     </select>
+
+    <select id="countOrders" resultType="java.lang.Integer">
+        SELECT
+        count(1)
+        FROM
+        t_order
+        <where>
+            <if test="pojo.orderSn != null and pojo.orderSn != ''">
+                and  order_sn like concat('%' , #{pojo.orderSn} , '%')
+            </if>
+            <if test="pojo.deliversSn != null and pojo.deliversSn != ''">
+                and  delivers_sn like concat('%' , #{pojo.deliversSn} , '%')
+            </if>
+            <if test="pojo.thirdTransId != null and pojo.thirdTransId != ''">
+                and  third_trans_id like concat('%' , #{pojo.thirdTransId} , '%')
+            </if>
+            <if test="pojo.mchId != null and pojo.mchId != ''">
+                and  mch_id like concat('%' , #{pojo.mchId} , '%')
+            </if>
+            <if test="pojo.machineId != null and pojo.machineId != ''">
+                and  machine_id like concat('%' , #{pojo.machineId} , '%')
+            </if>
+            <if test="pojo.machineName != null and pojo.machineName != ''">
+                and  machine_name like concat('%' , #{pojo.machineName} , '%')
+            </if>
+            <if test="pojo.deliveryMode != null and pojo.deliveryMode != ''">
+                and  delivery_mode like concat('%' , #{pojo.deliveryMode} , '%')
+            </if>
+            <if test="pojo.areaName != null and pojo.areaName != ''">
+                and  area_name like concat('%' , #{pojo.areaName} , '%')
+            </if>
+            <if test="pojo.payStatus != null and pojo.payStatus != ''">
+                and  pay_status like concat('%' , #{pojo.payStatus} , '%')
+            </if>
+            <if test="pojo.orderState != null and pojo.orderState != ''">
+                and  order_status like concat('%' , #{pojo.orderState} , '%')
+            </if>
+            <if test="beginTime != null">
+                and create_time &gt;= #{beginTime}
+            </if>
+            <if test="endTime != null">
+                and create_time &lt;= #{endTime}
+            </if>
+        </where>
+
+    </select>
     <select id="listOrder" resultType="com.genorder.entity.Order">
         SELECT
             *
         FROM
             t_order
+        <where>
+            <if test="pojo.orderSn != null and pojo.orderSn != ''">
+               and  order_sn like concat('%' , #{pojo.orderSn} , '%')
+            </if>
+            <if test="pojo.deliversSn != null and pojo.deliversSn != ''">
+                and  delivers_sn like concat('%' , #{pojo.deliversSn} , '%')
+            </if>
+            <if test="pojo.thirdTransId != null and pojo.thirdTransId != ''">
+                and  third_trans_id like concat('%' , #{pojo.thirdTransId} , '%')
+            </if>
+            <if test="pojo.mchId != null and pojo.mchId != ''">
+                and  mch_id like concat('%' , #{pojo.mchId} , '%')
+            </if>
+            <if test="pojo.machineId != null and pojo.machineId != ''">
+                and  machine_id like concat('%' , #{pojo.machineId} , '%')
+            </if>
+            <if test="pojo.machineName != null and pojo.machineName != ''">
+                and  machine_name like concat('%' , #{pojo.machineName} , '%')
+            </if>
+            <if test="pojo.deliveryMode != null and pojo.deliveryMode != ''">
+                and  delivery_mode like concat('%' , #{pojo.deliveryMode} , '%')
+            </if>
+            <if test="pojo.areaName != null and pojo.areaName != ''">
+                and  area_name like concat('%' , #{pojo.areaName} , '%')
+            </if>
+            <if test="pojo.payStatus != null and pojo.payStatus != ''">
+                and  pay_status like concat('%' , #{pojo.payStatus} , '%')
+            </if>
+            <if test="pojo.orderState != null and pojo.orderState != ''">
+                and  order_status like concat('%' , #{pojo.orderState} , '%')
+            </if>
+            <if test="beginTime != null">
+                and create_time &gt;= #{beginTime}
+            </if>
+            <if test="endTime != null">
+                and create_time &lt;= #{endTime}
+            </if>
+        </where>
+        order by id desc
+        limit #{firstIndex} , #{lastIndex}
     </select>
 
 </mapper>

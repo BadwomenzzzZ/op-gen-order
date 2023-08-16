@@ -4,8 +4,11 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.genorder.dto.*;
 import com.genorder.entity.Order;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.genorder.pojo.OrderSearchPOJO;
 
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -26,5 +29,5 @@ public interface IOrderService extends IService<Order> {
 
     void addOrder(OrderAddDTO dto);
 
-    Page<Order> listOrder(String token , Integer pageNumber, Integer pageSize);
+    Map listOrder(String token , Integer pageNumber, Integer pageSize , OrderSearchPOJO pojo , Date beginTime , Date endTime);
 }

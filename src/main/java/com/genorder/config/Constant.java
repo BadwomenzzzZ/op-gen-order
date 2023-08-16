@@ -7,6 +7,6 @@ public class Constant {
      */
     public static final String ORDER_PRE = "35NX";
 
-    public static final String ALL_ORDER_ROLE = "all";
+    public static final String ALL_ORDER_ROLE = "admin";
 
 }

@@ -13,6 +13,7 @@ import com.genorder.dto.*;
 import com.genorder.entity.*;
 import com.genorder.feign.UserFeign;
 import com.genorder.mapper.*;
+import com.genorder.pojo.OrderSearchPOJO;
 import com.genorder.service.IOrderService;
 import com.genorder.utils.ArithUtil;
 import com.genorder.utils.SnGenUtil;
@@ -24,8 +25,7 @@ import org.springframework.util.CollectionUtils;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * <p>
@@ -221,23 +221,34 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
     }
 
     @Override
-    public Page<Order> listOrder(String token , Integer pageNumber, Integer pageSize) {
-//        JSONObject rep = userFeign.getInfo(token);
-//        String code = rep.getString("code");
-//        if (!"200".equals(code)) {
-//            throw new BizException("服务异常");
-//        }
-//        JSONArray roles = rep.getJSONArray("roles");
-//        if (CollectionUtils.isEmpty(roles)) {
-//            return null;
-//        }
-//        String roleCode = (String) roles.get(0);
-//        if (Constant.ALL_ORDER_ROLE.equals(roleCode)) {
-//            Page<Order> page = new Page<>(pageNumber, pageSize);
-//            Page<Order> pageLists = orderMapper.listOrder(page);
-//            return pageLists;
-//        }
-        //// FIXME: 2023/8/7  需求变更
+    public Map listOrder(String token , Integer pageNumber, Integer pageSize , OrderSearchPOJO pojo , Date beginTime , Date endTime) {
+        JSONObject rep = userFeign.getInfo(token);
+        String code = rep.getString("code");
+        if (!"200".equals(code)) {
+            Map<String, Object> map = new HashMap<>();
+            map.put("code", Integer.valueOf(code));
+            map.put("msg", "服务错误");
+            return map;
+        }
+        JSONArray roles = rep.getJSONArray("roles");
+        if (CollectionUtils.isEmpty(roles)) {
+            return null;
+        }
+        String roleCode = (String) roles.get(0);
+        if (Constant.ALL_ORDER_ROLE.equals(roleCode)) {
+            Integer firstIndex = (pageNumber - 1) * pageSize;
+            Integer lastIndex = pageNumber * pageSize;
+            List<Order> list = orderMapper.listOrder(firstIndex, lastIndex , pojo , beginTime , endTime);
+            Integer totalNum = orderMapper.countOrders(pojo , beginTime , endTime);
+            Map<String, Object> map = new HashMap<>();
+            map.put("data", list);
+            map.put("code", 200);
+            map.put("error", false);
+            map.put("nsg", "查询成功");
+            map.put("success", true);
+            map.put("total", totalNum);
+            return map;
+        }
         return null;
     }
 }
