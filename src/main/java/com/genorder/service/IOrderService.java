@@ -20,7 +20,7 @@ import java.util.Map;
  */
 public interface IOrderService extends IService<Order> {
 
-    List<DeliverDTO> listDeliver();
+    List<DeliverDTO> listDeliver(String kw);
 
     List<GoodsDTO> listGoods(String deliverId);
 
@@ -28,6 +28,8 @@ public interface IOrderService extends IService<Order> {
 
 
     void addOrder(OrderAddDTO dto);
+
+    void addOrder(NewOrderAddDTO dto);
 
     Map listOrder(String token , Integer pageNumber, Integer pageSize , OrderSearchPOJO pojo , Date beginTime , Date endTime);
 }

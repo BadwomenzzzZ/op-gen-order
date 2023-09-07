@@ -13,6 +13,9 @@
                     LEFT JOIN sys_tenant st ON st.id = t2.tenant_id
             WHERE
                 st.tenant_name LIKE '%X'
+            <if test="kw != null and kw != ''">
+                and (t2.machine_name like concat('%',#{kw},'%') or t1.machine_id like concat('%',#{kw},'%'))
+            </if>
     </select>
 
     <select id="listGoods" resultType="com.genorder.dto.GoodsDTO">
@@ -35,6 +38,19 @@
                     LEFT JOIN t_account_store ts ON ts.account_id = tm.account_id
             WHERE
                 ms.machine_id = #{deliverId}
+    </select>
+
+    <select id="getRandomMs" resultType="java.lang.String">
+        SELECT
+            id
+        FROM
+            t_machine_shelf
+        WHERE
+            deleted = '0'
+          AND machine_id = #{machineId}
+        ORDER BY
+            RAND()
+            LIMIT 1
     </select>
 
 </mapper>

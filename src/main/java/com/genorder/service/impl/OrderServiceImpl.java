@@ -16,6 +16,8 @@ import com.genorder.mapper.*;
 import com.genorder.pojo.OrderSearchPOJO;
 import com.genorder.service.IOrderService;
 import com.genorder.utils.ArithUtil;
+import com.genorder.utils.ArraySplitter;
+import com.genorder.utils.DateUtil;
 import com.genorder.utils.SnGenUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +26,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import java.math.BigDecimal;
+import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.*;
 
 /**
@@ -68,8 +72,8 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
 
 
     @Override
-    public List<DeliverDTO> listDeliver() {
-        List<DeliverDTO>  list  = machineShelfMapper.listDeliver();
+    public List<DeliverDTO> listDeliver(String kw) {
+        List<DeliverDTO>  list  = machineShelfMapper.listDeliver(kw);
         if (CollectionUtils.isEmpty(list)) {
             return new ArrayList<>();
         }
@@ -188,6 +192,10 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
                     .lastUpdateTime(LocalDateTime.now().minusMinutes(10))
                     .version(1)
                     .build();
+            if (dto.getDeliveryTime() != null) {
+                Instant instant = dto.getDeliveryTime().toInstant();
+                orderItems.setDeliveryTime(instant.atZone(ZoneId.systemDefault()).toLocalDateTime());
+            }
             log.info("orderItems : {}", orderItems);
             orderItemsMapper.insert(orderItems);
             //add t_delivers_order
@@ -218,6 +226,54 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
             virtualOrderMapper.insert(virtualOrder);
             log.info("virtualOrder : {}" , virtualOrder);
         }
+    }
+
+    @Override
+    @Transactional
+    public void addOrder(NewOrderAddDTO dto) {
+        List<String> machineIds = dto.getMachineIds();
+        Integer alipayScale = dto.getAlipayScale(); //3
+        Integer wxScale = dto.getWxScale(); //1
+        double splitRatio = 0;
+        splitRatio = (double) wxScale /(alipayScale+wxScale);
+        List<String>[] lists = ArraySplitter.splitArray(machineIds, splitRatio);
+        List<String> wxArr = lists[0];
+        List<String> aliArr = lists[1];
+        //微信
+        if (!CollectionUtils.isEmpty(wxArr)) {
+            for (String machineId : wxArr) {
+                OrderAddDTO orderAddDTO = new OrderAddDTO();
+                orderAddDTO.setAccountId(dto.getAccountId());
+                orderAddDTO.setDeliveryTime(DateUtil.randomDateBetweenTwoDates(dto.getBTime(), dto.getETime()));
+                orderAddDTO.setPayType(1);
+                //随机该设备下的货道
+                String msId = machineShelfMapper.getRandomMs(machineId);
+                if (StringUtils.isBlank(msId)) {
+                    throw new BizException("设备"+machineId+"无商品");
+                }
+                orderAddDTO.setMsId(msId);
+                addOrder(orderAddDTO);
+                System.out.println(orderAddDTO);
+            }
+        }
+        //支付宝
+        if (!CollectionUtils.isEmpty(aliArr)) {
+            for (String machineId : aliArr) {
+                OrderAddDTO orderAddDTO = new OrderAddDTO();
+                orderAddDTO.setAccountId(dto.getAccountId());
+                orderAddDTO.setDeliveryTime(DateUtil.randomDateBetweenTwoDates(dto.getBTime(), dto.getETime()));
+                orderAddDTO.setPayType(2);
+                //随机该设备下的货道
+                String msId = machineShelfMapper.getRandomMs(machineId);
+                if (StringUtils.isBlank(msId)) {
+                    throw new BizException("设备"+machineId+"无商品");
+                }
+                orderAddDTO.setMsId(msId);
+                System.out.println(orderAddDTO);
+                addOrder(orderAddDTO);
+            }
+        }
+
     }
 
     @Override

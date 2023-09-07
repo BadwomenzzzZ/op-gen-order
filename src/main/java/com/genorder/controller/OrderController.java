@@ -1,5 +1,6 @@
 package com.genorder.controller;
 
+import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.genorder.config.BaseResponse;
@@ -34,9 +35,20 @@ public class OrderController {
         return BaseResponse.success();
     }
 
+    @PostMapping("/addNew")
+    public BaseResponse addNew(@RequestBody NewOrderAddDTO dto){
+        if (CollectionUtils.isEmpty(dto.getMachineIds()) || dto.getBTime() == null || dto.getETime() == null || StringUtils.isBlank(dto.getAccountId())
+                || dto.getWxScale() == null || dto.getAlipayScale() == null) {
+            return BaseResponse.error("请正确传递参数");
+        }
+        orderService.addOrder(dto);
+        return BaseResponse.success();
+    }
+
+
     @RequestMapping("/listDeliver")
-    public BaseResponse listDeliver() {
-        List<DeliverDTO> list = orderService.listDeliver();
+    public BaseResponse listDeliver(String kw) {
+        List<DeliverDTO> list = orderService.listDeliver(kw);
         return BaseResponse.success(list);
     }
 

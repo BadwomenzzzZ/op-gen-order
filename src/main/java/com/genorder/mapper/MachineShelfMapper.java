@@ -18,7 +18,9 @@ import java.util.List;
  */
 public interface MachineShelfMapper extends BaseMapper<MachineShelf> {
 
-    List<DeliverDTO> listDeliver();
+    List<DeliverDTO> listDeliver( @Param("kw") String kw);
 
     List<GoodsDTO> listGoods(@Param("deliverId") String deliverId);
+
+    String getRandomMs(@Param("machineId") String machineId);
 }
