@@ -168,11 +168,14 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
                     .areaNo(machine.getAreaNo())
                     .tenantId(machine.getTenantId())
                     .accountId(dto.getAccountId())
-                    .createTime(LocalDateTime.now().minusMinutes(10))
                     .version(1)
                     .lastUpdateTime(LocalDateTime.now().minusMinutes(10))
                     .machineShelves(machineShelf.getShelfIndex().toString())
                     .build();
+            if (dto.getDeliveryTime() != null) {
+                Instant instant = dto.getDeliveryTime().toInstant();
+                insertOrder.setCreateTime(instant.atZone(ZoneId.systemDefault()).toLocalDateTime());
+            }
             log.info("order : {}" , insertOrder);
             orderMapper.insert(insertOrder);
             //add t_order_items
@@ -216,6 +219,10 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
                     .totalQty(dto.getTotalNum())
                     .quantity(dto.getTotalNum())
                     .build();
+            if (dto.getDeliveryTime() != null) {
+                Instant instant = dto.getDeliveryTime().toInstant();
+                deliversOrder.setCreateTime(instant.atZone(ZoneId.systemDefault()).toLocalDateTime());
+            }
             log.info("deliversOrder : {}" , deliversOrder);
             deliversOrderMapper.insert(deliversOrder);
             //add t_virtual_log
