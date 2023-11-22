@@ -5,11 +5,13 @@ server:
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://127.0.0.1:3307/hxh_platform
-#    url: jdbc:mysql://127.0.0.1:3306/hxh_platform
+    url: jdbc:mysql://rm-wz95e2767lvcm89bj.mysql.rds.aliyuncs.com:3306/hxh_platform
+#    url: jdbc:mysql://127.0.0.1:3307/hxh_platform
     username: root
     password: hxh2023@
 #    password: 123456
+  jackson:
+    time-zone: Asia/Shanghai
 feign:
   okhttp:
     enabled: true
