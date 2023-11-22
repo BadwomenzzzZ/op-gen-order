@@ -3,9 +3,7 @@ package com.genorder.service.impl;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.genorder.config.BizException;
 import com.genorder.config.Constant;
@@ -69,6 +67,10 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
 
     @Autowired
     private UserFeign userFeign;
+    @Autowired
+    private ReplenishLogMapper replenishLogMapper;
+    @Autowired
+    private ReplenishPushMapper replenishPushMapper;
 
 
     @Override
@@ -225,6 +227,36 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
             }
             log.info("deliversOrder : {}" , deliversOrder);
             deliversOrderMapper.insert(deliversOrder);
+            //add t_replenish_push
+            Random random = new Random();
+            int randomMinutes = random.nextInt(60);
+            int randomSeconds = random.nextInt(60);
+            Instant instant = dto.getDeliveryTime().toInstant();
+            LocalDateTime dateTime = instant.atZone(ZoneId.systemDefault()).toLocalDateTime();
+            dateTime = dateTime.plusHours(5L).withMinute(randomMinutes).withSecond(randomSeconds);
+            ReplenishPush replenishPush = ReplenishPush.builder()
+                    .machineId(machineShelf.getMachineId())
+                    .createTime(dateTime).tag("[]")
+                    .build();
+            log.info("replenishPush : {}" , replenishPush);
+            replenishPushMapper.insert(replenishPush);
+            //add t_replenish_log
+            ReplenishLog replenishLog = ReplenishLog.builder()
+                    .machineId(machineShelf.getMachineId())
+                    .machineName(machine.getMachineName())
+                    .tenantId(machine.getTenantId())
+                    .accountId(dto.getAccountId())
+                    .replenishId(1L)
+                    .beforeStock(machineShelf.getStock() - 1)
+                    .sumStock(dto.getTotalNum())
+                    .afterStock(machineShelf.getStock())
+                    .replenishLogId((long) replenishPush.getId())
+                    .build();
+            if (dto.getDeliveryTime() != null) {
+                replenishLog.setCreateTime(dateTime);
+            }
+            log.info("replenishLog : {}" , replenishLog);
+            replenishLogMapper.insert(replenishLog);
             //add t_virtual_log
             VirtualLog virtualOrder = VirtualLog.builder()
                     .createTime(LocalDateTime.now())

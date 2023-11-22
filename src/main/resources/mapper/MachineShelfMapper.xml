@@ -12,7 +12,7 @@
                     LEFT JOIN t_machine t2 ON t1.machine_id = t2.machine_id
                     LEFT JOIN sys_tenant st ON st.id = t2.tenant_id
             WHERE
-                st.tenant_name LIKE '%X'
+                st.tenant_name LIKE '%X' and t2.deleted = 0
             <if test="kw != null and kw != ''">
                 and (t2.machine_name like concat('%',#{kw},'%') or t1.machine_id like concat('%',#{kw},'%'))
             </if>
