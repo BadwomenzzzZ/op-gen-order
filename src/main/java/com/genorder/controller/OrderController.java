@@ -1,17 +1,18 @@
 package com.genorder.controller;
 
+import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.genorder.config.BaseResponse;
 import com.genorder.dto.*;
-import com.genorder.entity.Order;
 import com.genorder.pojo.OrderSearchPOJO;
 import com.genorder.service.IOrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -44,6 +45,21 @@ public class OrderController {
         orderService.addOrder(dto);
         return BaseResponse.success();
     }
+
+
+    @PostMapping("/addNew_v2")
+    public BaseResponse addNewV2(@RequestBody NewOrderAddDTO dto){
+        if (CollectionUtils.isEmpty(dto.getMachineIds()) || StrUtil.isEmpty(dto.getBTimeStr()) || StrUtil.isEmpty(dto.getETimeStr()) || StringUtils.isBlank(dto.getAccountId())
+                || dto.getWxScale() == null || dto.getAlipayScale() == null || dto.getMaxOrderNum() == null || dto.getMinOrderNum() == null || dto.getTotalOrderNum() == null
+                || dto.getMaxOrderNum().intValue() < dto.getMinOrderNum().intValue()) {
+            return BaseResponse.error("请正确传递参数");
+        }
+        dto.setBTime(DateUtil.parse(dto.getBTimeStr(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+        dto.setETime(DateUtil.parse(dto.getETimeStr(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+        orderService.addNewV2(dto);
+        return BaseResponse.success();
+    }
+
 
 
     @RequestMapping("/listDeliver")

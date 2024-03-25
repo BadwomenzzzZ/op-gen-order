@@ -32,12 +32,12 @@ public class DateUtil {
 
     public static Date randomDateBetweenTwoDates(Date bTime, Date eTime) {
         // 输入的两个Date对象
-        Date startDate = parseStringToDate("2023-09-01 11:00:00"); // 起始日期
-        Date endDate = parseStringToDate("2023-09-02 11:00:00");   // 结束日期
+//        Date startDate = parseStringToDate("2024-03-25 12:11:32"); // 起始日期
+//        Date endDate = parseStringToDate("2024-03-25 23:59:59");   // 结束日期
 
         // 获取两个Date对象的时间戳
-        long startMillis = startDate.getTime();
-        long endMillis = endDate.getTime();
+        long startMillis = bTime.getTime();
+        long endMillis = eTime.getTime();
 
         // 使用Random类生成一个介于startMillis和endMillis之间的随机时间戳
         Random random = new Random();

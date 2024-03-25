@@ -32,4 +32,6 @@ public interface IOrderService extends IService<Order> {
     void addOrder(NewOrderAddDTO dto);
 
     Map listOrder(String token , Integer pageNumber, Integer pageSize , OrderSearchPOJO pojo , Date beginTime , Date endTime);
+
+    void addNewV2(NewOrderAddDTO dto);
 }

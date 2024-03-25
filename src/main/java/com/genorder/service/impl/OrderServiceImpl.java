@@ -13,10 +13,7 @@ import com.genorder.feign.UserFeign;
 import com.genorder.mapper.*;
 import com.genorder.pojo.OrderSearchPOJO;
 import com.genorder.service.IOrderService;
-import com.genorder.utils.ArithUtil;
-import com.genorder.utils.ArraySplitter;
-import com.genorder.utils.DateUtil;
-import com.genorder.utils.SnGenUtil;
+import com.genorder.utils.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -291,7 +288,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
                     throw new BizException("设备"+machineId+"无商品");
                 }
                 orderAddDTO.setMsId(msId);
-                addOrder(orderAddDTO);
+//                addOrder(orderAddDTO);
                 System.out.println(orderAddDTO);
             }
         }
@@ -309,7 +306,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
                 }
                 orderAddDTO.setMsId(msId);
                 System.out.println(orderAddDTO);
-                addOrder(orderAddDTO);
+//                addOrder(orderAddDTO);
             }
         }
 
@@ -345,5 +342,43 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
             return map;
         }
         return null;
+    }
+
+    @Override
+    @Transactional
+    public void addNewV2(NewOrderAddDTO dto) {
+        List<Date[]> dates = DateRangeSplitter.splitDateRange(dto.getBTime(), dto.getETime());
+        if (CollectionUtils.isEmpty(dates)) {
+            throw new BizException("请重新设置时间");
+        }
+        if (dates.size() > 30) {
+            throw new BizException("时间间隔不能大于30天");
+        }
+        List<Integer> randomList = RandomGenerator.finalRandomList(dto.getTotalOrderNum(), dto.getMaxOrderNum(), dates.size(), dto.getMinOrderNum());
+        if (CollectionUtils.isEmpty(randomList)) {
+            throw new BizException("请合理设置订单数量");
+        }
+        List<NewOrderAddDTO> reqList = new ArrayList<>();
+        for (int i = 0; i < randomList.size(); i++) {
+            Integer orderNum = randomList.get(i);
+            NewOrderAddDTO build = NewOrderAddDTO.builder()
+                    .bTime(dates.get(i)[0])
+                    .eTime(dates.get(i)[1])
+                    .alipayScale(dto.getAlipayScale())
+                    .wxScale(dto.getWxScale())
+                    .accountId(dto.getAccountId())
+                    .machineIds(new ArrayList<>())
+                    .build();
+            for (Integer integer = 0; integer < orderNum; integer++) {
+                build.getMachineIds().addAll(dto.getMachineIds());
+            }
+            reqList.add(build);
+        }
+        if (!CollectionUtils.isEmpty(reqList)) {
+            for (NewOrderAddDTO newOrderAddDTO : reqList) {
+                System.out.println("newOrderAddDTO = " + newOrderAddDTO);
+                addOrder(newOrderAddDTO);
+            }
+        }
     }
 }
