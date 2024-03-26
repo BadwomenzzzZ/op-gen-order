@@ -288,7 +288,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
                     throw new BizException("设备"+machineId+"无商品");
                 }
                 orderAddDTO.setMsId(msId);
-//                addOrder(orderAddDTO);
+                addOrder(orderAddDTO);
                 System.out.println(orderAddDTO);
             }
         }
@@ -306,7 +306,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
                 }
                 orderAddDTO.setMsId(msId);
                 System.out.println(orderAddDTO);
-//                addOrder(orderAddDTO);
+                addOrder(orderAddDTO);
             }
         }
 

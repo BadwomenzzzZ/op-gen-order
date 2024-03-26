@@ -8,10 +8,10 @@ import java.util.Random;
 
 public class RandomGenerator {
     public static void main(String[] args) {
-        int totalNum = 10;
-        int num = 5;
-        int totalAttempts = 3;
-        int minPerDay = 1; // 默认为1
+        int totalNum = 80;
+        int num = 8;
+        int totalAttempts = 10;
+        int minPerDay = 2; // 默认为1
 
         for (int j = 0; j < 100; j++) {
             List<Integer> resultList = finalRandomList(totalNum, num, totalAttempts, minPerDay);
@@ -29,6 +29,13 @@ public class RandomGenerator {
     }
 
     public static List<Integer> finalRandomList(int totalNum, int num, int totalAttempts, int minPerDay){
+        if (totalNum == num * totalAttempts) {
+            List<Integer> list = new ArrayList<>();
+            for (int i = 0; i < totalAttempts; i++) {
+                list.add(num);
+            }
+            return list;
+        }
         List<Integer> list = generateRandomList(totalNum, num, totalAttempts, minPerDay);
         if (CollectionUtil.isEmpty(list)) {
             return list;

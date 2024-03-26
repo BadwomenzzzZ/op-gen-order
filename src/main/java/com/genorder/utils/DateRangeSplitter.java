@@ -46,8 +46,8 @@ public class DateRangeSplitter {
 
 
     public static void main(String[] args) {
-        Date startDate = DateUtil.parse("2024-03-25 12:11:32", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-        Date endDate = DateUtil.parse("2024-03-27 10:20:21", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        Date startDate = DateUtil.parse("2024-03-01 12:11:32", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        Date endDate = DateUtil.parse("2024-03-10 19:00:00", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
 
         List<Date[]> dateRanges = splitDateRange(startDate, endDate);
 
