@@ -4,18 +4,42 @@
 
 
     <select id="listDeliver" resultType="com.genorder.dto.DeliverDTO">
-            SELECT
-                t1.machine_id AS id,
-                t2.machine_name AS NAME
-            FROM
-                ( SELECT machine_id FROM t_machine_shelf WHERE deleted = 0 GROUP BY machine_id ) t1
-                    LEFT JOIN t_machine t2 ON t1.machine_id = t2.machine_id
-                    LEFT JOIN sys_tenant st ON st.id = t2.tenant_id
-            WHERE
-                st.tenant_name LIKE '%X' and t2.deleted = 0
-            <if test="kw != null and kw != ''">
-                and (t2.machine_name like concat('%',#{kw},'%') or t1.machine_id like concat('%',#{kw},'%'))
-            </if>
+<!--            SELECT-->
+<!--                t1.machine_id AS id,-->
+<!--                t2.machine_name AS NAME-->
+<!--            FROM-->
+<!--                ( SELECT machine_id FROM t_machine_shelf WHERE deleted = 0 GROUP BY machine_id ) t1-->
+<!--                    LEFT JOIN t_machine t2 ON t1.machine_id = t2.machine_id-->
+<!--                    LEFT JOIN sys_tenant st ON st.id = t2.tenant_id-->
+<!--            WHERE-->
+<!--                st.tenant_name LIKE '%X' and t2.deleted = 0-->
+<!--            <if test="kw != null and kw != ''">-->
+<!--                and (t2.machine_name like concat('%',#{kw},'%') or t1.machine_id like concat('%',#{kw},'%'))-->
+<!--            </if>-->
+        SELECT
+        t1.machine_id AS id,
+        t2.machine_name AS NAME
+        FROM
+        (
+        SELECT
+        ts.machine_id
+        FROM
+        t_machine_shelf ts
+        LEFT JOIN t_goods tg ON tg.goods_id = ts.goods_id
+        WHERE
+        ts.deleted = 0
+        AND tg.goods_id IS NOT NULL
+        GROUP BY
+        ts.machine_id
+        ) t1
+        LEFT JOIN t_machine t2 ON t1.machine_id = t2.machine_id
+        LEFT JOIN sys_tenant st ON st.id = t2.tenant_id
+        WHERE
+        st.tenant_name LIKE '%X'
+        AND t2.deleted = 0
+        <if test="kw != null and kw != ''">
+            and (t2.machine_name like concat('%',#{kw},'%') or t1.machine_id like concat('%',#{kw},'%'))
+        </if>
     </select>
 
     <select id="listGoods" resultType="com.genorder.dto.GoodsDTO">
@@ -41,16 +65,28 @@
     </select>
 
     <select id="getRandomMs" resultType="java.lang.String">
+<!--        SELECT-->
+<!--            id-->
+<!--        FROM-->
+<!--            t_machine_shelf-->
+<!--        WHERE-->
+<!--            deleted = '0'-->
+<!--          AND machine_id = #{machineId}-->
+<!--        ORDER BY-->
+<!--            RAND()-->
+<!--            LIMIT 1-->
         SELECT
-            id
+        ts.id
         FROM
-            t_machine_shelf
+        t_machine_shelf ts
+        LEFT JOIN t_goods tg ON tg.goods_id = ts.goods_id
         WHERE
-            deleted = '0'
-          AND machine_id = #{machineId}
+        ts.deleted = '0'
+        AND ts.machine_id = #{machineId}
+        AND tg.goods_id IS NOT NULL
         ORDER BY
-            RAND()
-            LIMIT 1
+        RAND()
+        LIMIT 1
     </select>
 
     <select id="getActiviceById" resultType="com.genorder.entity.MachineShelf">
@@ -60,6 +96,6 @@
             t_machine_shelf ts
                 LEFT JOIN t_goods tg ON ts.goods_id = tg.goods_id
         WHERE
-            tg.goods_id IS NOT NULL
+            tg.goods_id IS NOT NULL and ts.id = #{msId}
     </select>
 </mapper>

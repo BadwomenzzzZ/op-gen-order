@@ -105,7 +105,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
             //发现goods中商品缺失，所以新增查询排查无用商品的货道信息
             MachineShelf machineShelf = machineShelfMapper.getActiviceById(dto.getMsId());
             if (machineShelf == null) {
-                throw new BizException("查无此商品");
+                throw new BizException("msId:"+dto.getMsId()+"查无此商品");
             }
             if (machineShelf.getStock().intValue() < dto.getTotalNum().intValue()) {
                 throw new BizException("购买数量不能大于库存数量");
@@ -114,7 +114,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
             var1.eq("machine_id", machineShelf.getMachineId());
             Machine machine = machineMapper.selectOne(var1);
             if (machine == null) {
-                throw new BizException("查无此设备");
+                throw new BizException("machineId"+machineShelf.getMachineId()+"查无此设备");
             }
             Goods goods = new Goods();
             if (StringUtils.isNotBlank(machineShelf.getGoodsId())) {
