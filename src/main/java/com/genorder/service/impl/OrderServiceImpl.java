@@ -101,7 +101,9 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
     @Transactional
     public void addOrder(OrderAddDTO dto) {
         synchronized(this){
-            MachineShelf machineShelf = machineShelfMapper.selectById(dto.getMsId());
+//            MachineShelf machineShelf = machineShelfMapper.selectById(dto.getMsId());
+            //发现goods中商品缺失，所以新增查询排查无用商品的货道信息
+            MachineShelf machineShelf = machineShelfMapper.getActiviceById(dto.getMsId());
             if (machineShelf == null) {
                 throw new BizException("查无此商品");
             }
@@ -202,21 +204,21 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
             orderItemsMapper.insert(orderItems);
             //add t_delivers_order
             DeliversOrder deliversOrder = DeliversOrder.builder()
-                    .machineId(machineShelf.getMachineId())
-                    .machineName(machine.getMachineName())
-                    .shelfIndex(machineShelf.getShelfIndex())
-                    .status(shipStatus)
-                    .price(machineShelf.getPrice())
-                    .tenantId(machine.getTenantId())
-                    .accountId(dto.getAccountId())
-                    .orderSn(orderSn)
-                    .deliversSn(deliversSn)
-                    .deliveryType(deliveryType)
-                    .createTime(LocalDateTime.now().minusMinutes(8))
-                    .goodsId(machineShelf.getGoodsId())
-                    .goodsName(StringUtils.isBlank(machineShelf.getGoodsId()) ? "商品".concat(machineShelf.getShelfIndex().toString()) : goods.getGoodsName())
-                    .totalQty(dto.getTotalNum())
-                    .quantity(dto.getTotalNum())
+                    .machineId(machineShelf.getMachineId()) //
+                    .machineName(machine.getMachineName()) //
+                    .shelfIndex(machineShelf.getShelfIndex())//
+                    .status(shipStatus)//
+                    .price(machineShelf.getPrice())//
+                    .tenantId(machine.getTenantId())//
+                    .accountId(dto.getAccountId())//
+                    .orderSn(orderSn)//
+                    .deliversSn(deliversSn)//
+                    .deliveryType(deliveryType)//
+                    .createTime(LocalDateTime.now().minusMinutes(8))//
+                    .goodsId(machineShelf.getGoodsId())//
+                    .goodsName(StringUtils.isBlank(machineShelf.getGoodsId()) ? "商品".concat(machineShelf.getShelfIndex().toString()) : goods.getGoodsName())//
+                    .totalQty(dto.getTotalNum())//
+                    .quantity(dto.getTotalNum())//
                     .build();
             if (dto.getDeliveryTime() != null) {
                 Instant instant = dto.getDeliveryTime().toInstant();

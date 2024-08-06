@@ -23,4 +23,6 @@ public interface MachineShelfMapper extends BaseMapper<MachineShelf> {
     List<GoodsDTO> listGoods(@Param("deliverId") String deliverId);
 
     String getRandomMs(@Param("machineId") String machineId);
+
+    MachineShelf getActiviceById(@Param("msId") String msId);
 }

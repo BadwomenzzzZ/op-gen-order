@@ -53,4 +53,13 @@
             LIMIT 1
     </select>
 
+    <select id="getActiviceById" resultType="com.genorder.entity.MachineShelf">
+        SELECT
+            ts.*
+        FROM
+            t_machine_shelf ts
+                LEFT JOIN t_goods tg ON ts.goods_id = tg.goods_id
+        WHERE
+            tg.goods_id IS NOT NULL
+    </select>
 </mapper>
